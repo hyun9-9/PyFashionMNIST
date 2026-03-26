@@ -117,5 +117,17 @@ transform = transforms.Compose([
 ])
 
 
-
+def save_uploaded_file(directory,file):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    with open(os.path.join(directory,file.name),'wb') as f:
+        f.write(file.getbuffer())
+    return st.success('파일 업로드 성공')
 st.title("FashionMNIST")
+
+img_file = st.file_uploader("이미지을 업로드 하세요",type=['png','jpg','jpeg'])
+if img_file:
+    save_uploaded_file('images',img_file)
+    st.image(f"images/{img_file.name}")
+    _, pred_class = predict(os.path.join('images',img_file.name),model,transform)
+    st.subheader(pred_class)
